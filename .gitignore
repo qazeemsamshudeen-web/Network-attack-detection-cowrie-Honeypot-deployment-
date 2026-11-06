@@ -17,3 +17,6 @@ ENV/
 *.swp
 *.swo
 *~
+
+# Helper script
+push_to_github.bat
