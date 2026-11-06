@@ -96,7 +96,10 @@ tcp LISTEN 0 50 0.0.0.0:2222 0.0.0.0:* users:(("twistd",pid=1969,fd=12))
 
 * **Process Identity:** Process ID `1969` / `3515` (`twistd`) actively binds socket `0.0.0.0:2222`.
 * **Listener Queue:** Backlog queue configured to accept incoming audit connections without exposing raw host-level administrative interfaces.
-* **Evidence Reference:** *Figure 1.1: Verification of active Cowrie honeypot TCP listener on port 2222.*
+
+#### Evidence Artifact: Service Listener Verification
+![Figure 1.1: Verification of active Cowrie honeypot TCP listener on port 2222](M1-Honeypot-Provisioning/cowrie_service_status.png)
+*Figure 1.1: Verification of active Cowrie honeypot TCP listener on port 2222 via `twistd`.*
 
 ---
 
@@ -127,7 +130,10 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Nmap done: 1 IP address (1 host up) scanned in 1.80 seconds
 ```
-* **Evidence Reference:** *Figure 2.1: Terminal execution and service version discovery using Nmap against port 2222.*
+
+#### Evidence Artifact: Service Version & Host Key Discovery
+![Figure 2.1: Terminal execution and service version discovery using Nmap against port 2222](M2-Reconnaissance-Auditing/nmap_version_scan.png)
+*Figure 2.1: Terminal execution and service version discovery using Nmap against port 2222.*
 
 ### M2.3 Technical Reconnaissance & Exposure Analysis
 1. **Port State & Service Banner Emulation:**
@@ -171,12 +177,15 @@ Client (10.0.0.3:36866)                    Cowrie Listener (10.0.0.5:2222)
        |<===============================================>| (Encrypted Session Keying)
 ```
 
+#### Evidence Artifact: Wireshark Protocol Flow Trace
+![Figure 3.1: Wireshark packet capture exhibiting TCP 3-way handshake and protocol negotiation on port 2222](M3-Forensic-Traffic-Decoupling/wireshark_traffic_capture.png)
+*Figure 3.1: Wireshark packet capture exhibiting TCP 3-way handshake sequence (Frames 10-12) and protocol exchange on port 2222.*
+
 ### M3.2 Step-by-Step Protocol Mechanics
 1. **TCP Three-Way Handshake Breakdown (Frames 10–12):**
    * **Frame 10 (Client -> Server) [SYN]:** Kali (`10.0.0.3:36866`) dispatches a TCP segment to Ubuntu (`10.0.0.5:2222`) with the SYN flag enabled, setting initial Sequence Number `Seq = 0`, `Window Size = 64240`, `MSS = 1460`, and `SACK permitted`.
    * **Frame 11 (Server -> Client) [SYN-ACK]:** Cowrie listener (`10.0.0.5:2222`) acknowledges with flags SYN and ACK asserted, `Seq = 0`, `Ack = 1`, `Window Size = 65160`, `MSS = 1460`, `SACK permitted`.
    * **Frame 12 (Client -> Server) [ACK]:** Client acknowledges the target sequence number via `Ack = 1`, `Seq = 1`, `Window Size = 64256`, transitioning connection into `ESTABLISHED`.
-   * *Evidence Reference:* *Figure 3.1: Wireshark packet capture exhibiting TCP 3-way handshake sequence (Frames 10-12).*
 
 2. **SSH Protocol Version Exchange (Frames 13–14):**
    * Following transport establishment, both hosts immediately transmit cleartext identification strings before entering encrypted states:
@@ -189,7 +198,6 @@ Client (10.0.0.3:36866)                    Cowrie Listener (10.0.0.5:2222)
      * **Symmetric Encryption Ciphers:** `chacha20-poly1305@openssh.com`, `aes128-ctr`, `aes256-gcm@openssh.com`
      * **Data Integrity (MAC):** `hmac-sha2-256`, `hmac-sha2-512`
    * Subsequent Diffie-Hellman ephemeral exchanges derive symmetric session keys, encrypting all subsequent authentication payloads.
-   * *Evidence Reference:* *Figure 3.2: Protocol version exchange and cryptographic negotiation (KEXINIT) forensic trace.*
 
 ---
 
@@ -213,7 +221,14 @@ The interaction engaged several defensive deception mechanics:
   * **Total Connection Hold Time:** `138,051 ms` (~138.05 s)
   * **Raw Keystroke Log Path:** `var/lib/cowrie/tty/aaaa3c835cde5b9e72f726bfc62eacf39ff08b7e801464b6c1cc22241a1a314f`
   * **Clean Disconnection Semantics:** `exitCode: 0`, avatar `root` logging out, remote disconnect code 11 (`b'disconnected by user'`).
-* *Evidence Reference:* *Figure 4.1: Kali Linux auditing client connecting to Cowrie SSH honeypot on port 2222.*
+
+#### Evidence Artifact: Adversary SSH Client Interaction
+![Figure 4.1: Kali Linux auditing client connecting to Cowrie SSH honeypot on port 2222](M4-Telemetry-Adversary-Analysis/kali_ssh_interaction.png)
+*Figure 4.1: Kali Linux auditing client connecting to Cowrie SSH honeypot on port 2222.*
+
+#### Evidence Artifact: Wireshark Transport Stream Correlation (M3 / M4 Cross-Validation)
+![Figure 4.2: Wireshark forensic packet trace correlating interactive ingress SSH traffic](M3-Forensic-Traffic-Decoupling/wireshark_traffic_capture.png)
+*Figure 4.2: Wireshark forensic trace correlating transport-level packet flows during interactive SSH session.*
 
 ### M4.2 Structured Telemetry & Log Audit Output (`cowrie.json`)
 ```json
@@ -225,8 +240,11 @@ The interaction engaged several defensive deception mechanics:
 2026-11-05T15:12:02.432714Z [HoneyPotSSHTransport,36,10.0.0.3] avatar root logging out
 2026-11-05T15:12:02.434091Z [ssh,7854fe4b6204,10.0.0.3] Connection lost after 138051 milliseconds
 ```
-* **Evaluation:** Confirms exact 1:1 correlation between interactive terminal execution from `10.0.0.3` and backend server telemetry in `cowrie.json`.
-* *Evidence Reference:* *Figure 4.2: Cowrie incident telemetry exhibiting adversary command logging, TTY recording generation, and session timing metrics.*
+* **Evaluation:** Confirms exact 1:1 correlation between interactive terminal execution from `10.0.0.3` and backend server telemetry in `cowrie.json` and `cowrie.log`.
+
+#### Evidence Artifact: Real-Time Honeypot Server Telemetry
+![Figure 4.3: Cowrie incident telemetry exhibiting adversary command logging, TTY recording generation, and session timing metrics](M4-Telemetry-Adversary-Analysis/cowrie_incident_telemetry.png)
+*Figure 4.3: Cowrie incident telemetry exhibiting adversary command logging (whoami, ls, pwd, exit), TTY recording generation, and session timing metrics.*
 
 ---
 
@@ -288,19 +306,24 @@ All raw PCAP and log artifacts are curated inside the centralized Google Drive e
 ```text
 .
 ├── M1-Honeypot-Provisioning/
-│   ├── cowrie.cfg                             # Figure 1.1: Honeypot daemon configuration
+│   ├── cowrie_service_status.png              # Figure 1.1: Honeypot service status & ss listener
+│   ├── cowrie.cfg                             # Honeypot daemon configuration
 │   ├── daemon_listener_binding.log            # Verbatim ss -tulpn socket output
 │   ├── iptables_rules.v4                      # Outbound containment rules
 │   └── sysctl_hardening.conf                  # TCP stack camouflage options
 ├── M2-Reconnaissance-Auditing/
-│   ├── 02_nmap_recon_scan_output.txt          # Figure 2.1: Verbatim Nmap scan log
+│   ├── nmap_version_scan.png                  # Figure 2.1: Terminal Nmap scan execution
+│   ├── 02_nmap_recon_scan_output.txt          # Verbatim Nmap scan log
 │   └── hostkey_fingerprints.log               # Cryptographic signatures (RSA, ECDSA, ED25519)
 ├── M3-Forensic-Traffic-Decoupling/
+│   ├── wireshark_traffic_capture.png          # Figure 3.1 & 4.2: Wireshark frame capture
 │   ├── scripts/
 │   │   └── generate_pcap.py                   # Python generator for Frames 10-16
-│   └── packet_analysis_notes.md               # Figures 3.1 & 3.2: Wireshark handshake trace
+│   └── packet_analysis_notes.md               # Wireshark handshake trace notes
 ├── M4-Telemetry-Adversary-Analysis/
-│   ├── 03_cowrie_session_telemetry.json       # Figures 4.1 & 4.2: Structured session JSON
+│   ├── kali_ssh_interaction.png               # Figure 4.1: Interactive client SSH terminal
+│   ├── cowrie_incident_telemetry.png          # Figure 4.3: Server-side command & TTY telemetry
+│   ├── 03_cowrie_session_telemetry.json       # Structured session JSON
 │   ├── cowrie.log                             # Human-readable text audit trail
 │   └── tty_recordings/
 │       └── aaaa3c835cde5b9e72f726bfc62eacf39ff08b7e801464b6c1cc22241a1a314f  # Keystroke stream
