@@ -1,0 +1,13 @@
+2026-11-05T15:09:44.383040Z [HoneyPotSSHTransport,36,10.0.0.3] New connection: 10.0.0.3:36866 (10.0.0.5:2222) [session: 7854fe4b6204]
+2026-11-05T15:09:44.412190Z [HoneyPotSSHTransport,36,10.0.0.3] Remote SSH version: SSH-2.0-OpenSSH_9.6p1 Debian-4
+2026-11-05T15:09:44.448512Z [HoneyPotSSHTransport,36,10.0.0.3] kex alg [curve25519-sha256] key alg [ssh-ed25519] cipher [chacha20-poly1305@openssh.com] mac [hmac-sha2-256]
+2026-11-05T15:10:12.819302Z [SSHService 'ssh-userauth' on HoneyPotSSHTransport,36,10.0.0.3] login attempt [admin/admin@2026] failed
+2026-11-05T15:10:45.989104Z [SSHService 'ssh-userauth' on HoneyPotSSHTransport,36,10.0.0.3] login attempt [root/Password123!] succeeded
+2026-11-05T15:10:46.012450Z [HoneyPotSSHTransport,36,10.0.0.3] Opening TTY Log: var/lib/cowrie/tty/aaaa3c835cde5b9e72f726bfc62eacf39ff08b7e801464b6c1cc22241a1a314f
+2026-11-05T15:10:56.025144Z [ssh,7854fe4b6204,10.0.0.3] CMD: whoami
+2026-11-05T15:10:58.860938Z [ssh,7854fe4b6204,10.0.0.3] CMD: ls
+2026-11-05T15:11:02.986668Z [ssh,7854fe4b6204,10.0.0.3] CMD: pwd
+2026-11-05T15:12:02.405441Z [ssh,7854fe4b6204,10.0.0.3] CMD: exit
+2026-11-05T15:12:02.427268Z [ssh,7854fe4b6204,10.0.0.3] Closing TTY Log: var/lib/cowrie/tty/aaaa3c835cde5b9e72f726bfc62eacf39ff08b7e801464b6c1cc22241a1a314f after 76346 milliseconds
+2026-11-05T15:12:02.432714Z [HoneyPotSSHTransport,36,10.0.0.3] avatar root logging out
+2026-11-05T15:12:02.434091Z [ssh,7854fe4b6204,10.0.0.3] Connection lost after 138051 milliseconds

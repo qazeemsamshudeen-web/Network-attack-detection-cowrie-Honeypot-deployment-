@@ -1,0 +1,15 @@
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-11-04 14:15 EST
+Nmap scan report for 10.0.0.5
+Host is up (0.00045s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   closed ssh
+2222/tcp open   ssh     OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 38:06:d4:a4:08:4c:9b:c6:f5:5f:a5:96:ba:77:f1:8f (RSA)
+|   256 0a:6f:75:1e:b1:98:78:0c:88:05:6b:eb:7c:2b:07:91 (ECDSA)
+|_  256 72:c8:28:3d:3e:80:23:98:1b:d4:15:e6:50:d9:71:f7 (ED25519)
+MAC Address: 08:00:27:FB:1D:F0 (Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Nmap done: 1 IP address (1 host up) scanned in 1.80 seconds

@@ -1,0 +1,17 @@
+# Cowrie TTY Log Replay Stream
+# Session ID: 7854fe4b6204
+# Avatar: root
+# Source: 10.0.0.3:36866
+# Target: 10.0.0.5:2222
+# Duration: 76346 ms
+# Hash Identifier: aaaa3c835cde5b9e72f726bfc62eacf39ff08b7e801464b6c1cc22241a1a314f
+
+[2026-11-05 15:10:46.000] root@debian-srv-01:~# whoami
+[2026-11-05 15:10:56.025] root
+[2026-11-05 15:10:57.100] root@debian-srv-01:~# ls
+[2026-11-05 15:10:58.860] Desktop  Documents  Downloads  Music  Pictures  Videos
+[2026-11-05 15:11:00.200] root@debian-srv-01:~# pwd
+[2026-11-05 15:11:02.986] /root
+[2026-11-05 15:12:00.000] root@debian-srv-01:~# exit
+[2026-11-05 15:12:02.405] logout
+[2026-11-05 15:12:02.427] [SESSION TERMINATED BY CLIENT - STATUS CODE 11]
