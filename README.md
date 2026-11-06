@@ -109,7 +109,7 @@ tcp LISTEN 0 50 0.0.0.0:2222 0.0.0.0:* users:(("twistd",pid=1969,fd=12))
 From the auditing workstation (`10.0.0.3`), active service version scanning was executed against the deception interface using Nmap:
 
 ```bash
-nmap -sV -p 2222 10.0.0.5
+nmap -sV s-C -p 2222 10.0.0.5
 ```
 
 ### M2.2 Verbatim Terminal Scan Output
